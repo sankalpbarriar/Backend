@@ -41,6 +41,7 @@ const videoSchema = new Schema(
   }
 );
 
+//aggregation pipeline for mongoose adding aggregation plugin
 videoSchema.plugin(mongooseAggregatePaginate)
 
 export const Video = mongoose.model("Video", videoSchema);

@@ -10,7 +10,7 @@ const userSchema = new Schema(
       unique: true,
       lowercase: true,
       trim: true,
-      index: true, //to eanble searching field
+      index: true, //to eanble searching field in the database
     },
     email: {
       type: String,
@@ -26,7 +26,7 @@ const userSchema = new Schema(
       index: true,
     },
     avatar: {
-      type: String, //will be using cloudnary
+      type: String, //will be using cloudnary to get the URL
       required: true,
     },
     coverImage: {
@@ -51,20 +51,19 @@ const userSchema = new Schema(
   }
 );
 
-//converting into hash
+//converting into hash   using pre hook to encypt password just before saving
 userSchema.pre("save", async function (next) {
-  if (this.idModified("password")) next();
+  if (!this.isModified("password")) return next();
 
   this.password = await bcrypt.hash(this.password, 10);
   next();
 });
 
 userSchema.methods.isPasswordCorrect = async function (password) {
-  return await bcrypt.compare(password, this.password);
+  return await bcrypt.compare(password, this.password); //matching the passoword using compare method
 };
 
-
-//generating access token
+//generating access token  (टोकन बताओ access पाओ)
 userSchema.methods.generateAccessToken = function () {
   return jwt.sign(
     {
@@ -80,7 +79,7 @@ userSchema.methods.generateAccessToken = function () {
   );
 };
 
-//generating refresh token
+//generating refresh token  (refresh token me details kam lagti hai)
 userSchema.methods.generateRefreshToken = function () {
   return jwt.sign(
     {
@@ -92,6 +91,5 @@ userSchema.methods.generateRefreshToken = function () {
     }
   );
 };
-userSchema.methods.generateRefreshToken = function () {};
 
 export const User = mongoose.model("User", userSchema);

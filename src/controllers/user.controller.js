@@ -6,6 +6,7 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 
 const registerUser = asyncHandler(async (req, res) => {
   
+         // ALGORITHM TO REGISTER USER
   //get user details from frontend
   //validation-not empty
   //check if user exists: username,email
@@ -16,8 +17,8 @@ const registerUser = asyncHandler(async (req, res) => {
   //check for user creation
   //return response if not return error message
 
-  const { fullName, email, username, password } = req.body; //req.body ke andar apna data aa raha hai
-  console.log("email", email);
+  const { fullName, email, username, password } = req.body;  //req.body ke andar apna data aa raha hai
+  // console.log("email", email);
 
   //CHECKS --> saare fields ko ek baar me hi check kar liya using array and giving Api Error message
   if (
@@ -27,7 +28,7 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 
   //CHECK--> wheather user exists in prior and returning proper Error message
-  const existedUser = User.findOne({
+  const existedUser = await User.findOne({
     $or: [{ username }, { email }],
   });
 
@@ -36,7 +37,8 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 
   //taking avatar path from multer
-  const avatarLocalPath = req.files?.avatar[0]?.path; //abhi ye server pe hai clodinart pe nahi gaya hai
+  console.log("reg.files ",req.files)
+  const avatarLocalPath = req.files?.avatar[0]?.path; //abhi ye server pe hai clodinary pe nahi gaya hai
   const coverImageLocalPath = req.files?.coverImage[0]?.path;
 
   //avatar file to rehna hi chaiye
@@ -78,3 +80,4 @@ const registerUser = asyncHandler(async (req, res) => {
 });
 
 export { registerUser };
+
