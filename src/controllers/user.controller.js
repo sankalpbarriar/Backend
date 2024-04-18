@@ -37,9 +37,14 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 
   //taking avatar path from multer
-  console.log("reg.files ",req.files)
-  const avatarLocalPath = req.files?.avatar[0]?.path; //abhi ye server pe hai clodinary pe nahi gaya hai
-  const coverImageLocalPath = req.files?.coverImage[0]?.path;
+  // console.log("reg.files ",req.files)
+  const avatarLocalPath = req.files?.avatar[0]?.path;     //abhi ye server pe hai clodinary pe nahi gaya hai
+  // const coverImageLocalPath = req.files?.coverImage[0]?.path;
+
+  let coverImageLocalPath;
+  if(req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length>0){
+       coverImageLocalPath=req.files.coverImage[0]?.path;
+  }
 
   //avatar file to rehna hi chaiye
   if (!avatarLocalPath) {
@@ -59,7 +64,7 @@ const registerUser = asyncHandler(async (req, res) => {
   const user = await User.create({
     fullName,
     avatar: avatar.url,
-    coverImage: coverImage.url || "", //kui ki hamne coverImage ka check nahi lagaya hai isliye agar nahi hai to empty pass kar do
+    coverImage: coverImage?.url || "", //kui ki hamne coverImage ka check nahi lagaya hai isliye agar nahi hai to empty pass kar do
     email,
     password,
     username: username.toLowerCase(),
